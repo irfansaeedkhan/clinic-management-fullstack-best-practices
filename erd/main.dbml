@@ -1,0 +1,176 @@
+Project clinic_management_system {
+  database_type: 'PostgreSQL'
+  Note: '''
+    MVP ERD for clinic management system.
+    Auth tables are managed by Better Auth CLI (pnpm auth:generate).
+    Domain tables are managed via Drizzle migrations.
+  '''
+}
+
+// =============================================================================
+// Enums
+// =============================================================================
+
+Enum platform_role {
+  super_user [note: 'Assigned/unassigned via DB/ops only — not via API']
+}
+
+Enum user_status {
+  active
+  inactive [note: 'Blocks login when set on user.status']
+  pending [note: 'Awaiting SU approval; blocks login until active']
+}
+
+Enum staff_status {
+  active
+  inactive [note: 'Removes clinic access; user can still sign in to other clinics']
+}
+
+Enum staff_role_enum {
+  admin
+  doctor
+  receptionist
+}
+
+// =============================================================================
+// Auth (Better Auth — managed by CLI)
+// =============================================================================
+
+TableGroup auth {
+  user
+  session
+  account
+  verification
+}
+
+Table user {
+  id integer [pk, increment, note: 'Better Auth serial ID']
+  name text [not null]
+  email text [not null, unique]
+  email_verified boolean [not null, default: false]
+  image text
+  phone text [note: 'additionalFields — super user sets on create; user edits in settings']
+  platform_role platform_role [note: 'additionalFields input:false — assign via DB/ops; visible on own session; omit from other-user API responses']
+  status user_status [not null, default: 'pending', note: 'additionalFields — global account status; pending/inactive block login']
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  Note: '''
+    Managed by Better Auth CLI (pnpm auth:generate).
+    Define phone, platform_role, status in auth.ts user.additionalFields.
+    Do not add custom columns outside additionalFields config.
+  '''
+}
+
+Table session {
+  id integer [pk, increment]
+  expires_at timestamp [not null]
+  token text [not null, unique]
+  active_clinic_id integer [note: 'additionalFields input:false — null = platform mode (super user) or clinic picker pending']
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null]
+  ip_address text
+  user_agent text
+  user_id integer [not null, ref: > user.id]
+
+  indexes {
+    user_id [name: 'session_userId_idx']
+  }
+
+  Note: '''
+    Managed by Better Auth CLI (pnpm auth:generate).
+    Define active_clinic_id in auth.ts session.additionalFields.
+    Staff: must be active staff at active_clinic_id.
+    Super user: null for platform mode, or any clinic.
+    Auto-set on login when exactly one active staff record.
+  '''
+}
+
+Table account {
+  id integer [pk, increment]
+  account_id text [not null]
+  provider_id text [not null]
+  user_id integer [not null, ref: > user.id]
+  access_token text
+  refresh_token text
+  id_token text
+  access_token_expires_at timestamp
+  refresh_token_expires_at timestamp
+  scope text
+  password text
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null]
+
+  indexes {
+    user_id [name: 'account_userId_idx']
+  }
+
+  Note: 'Managed by Better Auth CLI (pnpm auth:generate).'
+}
+
+Table verification {
+  id integer [pk, increment]
+  identifier text [not null]
+  value text [not null]
+  expires_at timestamp [not null]
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  indexes {
+    identifier [name: 'verification_identifier_idx']
+  }
+
+  Note: 'Managed by Better Auth CLI (pnpm auth:generate).'
+}
+
+// =============================================================================
+// Domain — Users & clinic access
+// =============================================================================
+
+TableGroup clinic_access {
+  clinic
+  staff
+  staff_role
+}
+
+Table clinic {
+  id integer [pk, increment]
+  name text [not null, note: 'Stub — full clinic schema TBD']
+
+  Note: 'Minimal stub for FK references. Clinic design not yet finalized.'
+}
+
+Table staff {
+  id integer [pk, increment]
+  user_id integer [not null, ref: > user.id]
+  clinic_id integer [not null, ref: > clinic.id]
+  status staff_status [not null, default: 'active']
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (user_id, clinic_id) [unique]
+  }
+
+  Note: '''
+    Staff at a clinic. One row per user per clinic (= one staff member).
+    Roles are assigned separately via the roles API (may be zero).
+    Status changes via staff or super user API.
+  '''
+}
+
+Table staff_role {
+  id integer [pk, increment]
+  staff_id integer [not null, ref: > staff.id]
+  role staff_role_enum [not null]
+
+  indexes {
+    (staff_id, role) [unique]
+  }
+
+  Note: '''
+    Multiple roles per staff member allowed (e.g. admin + doctor).
+    Zero roles allowed — staff without roles cannot access clinic-scoped endpoints.
+    RBAC: admin superset inherits doctor + receptionist permissions.
+  '''
+}

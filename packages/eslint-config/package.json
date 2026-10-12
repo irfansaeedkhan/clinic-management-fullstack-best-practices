@@ -1,0 +1,15 @@
+{
+  "name": "@repo/eslint-config",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "ESLint configs",
+  "exports": {
+    "./base": "./base.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "typescript-eslint": "catalog:"
+  }
+}

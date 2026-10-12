@@ -1,0 +1,4 @@
+pnpm-lock.yaml
+
+# drizzle migrations
+apps/api/src/db/migrations

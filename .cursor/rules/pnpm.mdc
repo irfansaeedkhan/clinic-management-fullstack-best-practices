@@ -1,0 +1,37 @@
+---
+description: Use pnpm and pnpm dlx for all package manager and one-off CLI commands
+alwaysApply: true
+---
+
+# Package Manager: pnpm Only
+
+This is a pnpm monorepo (`pnpm-workspace.yaml`, `pnpm-lock.yaml`). Always use **pnpm** — never npm, yarn, bun, or npx.
+
+## Commands
+
+| Instead of          | Use                                    |
+| ------------------- | -------------------------------------- |
+| `npm install`       | `pnpm install`                         |
+| `npm add <pkg>`     | `pnpm add <pkg>`                       |
+| `npm run <script>`  | `pnpm run <script>` or `pnpm <script>` |
+| `npx <cmd>`         | `pnpm dlx <cmd>`                       |
+| `yarn` / `yarn add` | `pnpm` / `pnpm add`                    |
+
+## Monorepo
+
+- Run scripts in a workspace package: `pnpm --filter <package> <script>`
+- Run across all packages: `pnpm -r run <script>`
+
+## Examples
+
+```bash
+# ❌ BAD
+npm install
+npx create-vite@latest
+npm run dev
+
+# ✅ GOOD
+pnpm install
+pnpm dlx create-vite@latest
+pnpm dev
+```

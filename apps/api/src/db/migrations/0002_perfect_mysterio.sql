@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "status" SET NOT NULL;

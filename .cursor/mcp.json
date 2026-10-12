@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "Better Auth": {
+      "url": "https://mcp.better-auth.com/mcp",
+      "headers": {}
+    },
+    "yaak": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://127.0.0.1:64343/mcp"]
+    }
+  }
+}

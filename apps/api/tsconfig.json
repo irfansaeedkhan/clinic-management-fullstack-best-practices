@@ -1,0 +1,11 @@
+{
+  "extends": "@repo/typescript-config/node",
+
+  "compilerOptions": {
+    // File Layout
+    "rootDir": "./src",
+
+    // Hono JSX
+    "jsxImportSource": "hono/jsx"
+  }
+}

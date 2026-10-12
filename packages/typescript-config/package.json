@@ -1,0 +1,10 @@
+{
+  "name": "@repo/typescript-config",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "TypeScript configs",
+  "exports": {
+    "./node": "./node.json",
+    "./library": "./library.json"
+  }
+}

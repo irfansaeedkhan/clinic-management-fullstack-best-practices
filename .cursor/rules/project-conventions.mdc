@@ -1,0 +1,55 @@
+---
+description: General project conventions and instructions the agent should always follow
+alwaysApply: true
+---
+
+# Project Conventions
+
+Living reference for small, cross-cutting rules. Add new items here as patterns emerge.
+
+## File Names
+
+- Use **kebab-case** for all file and directory names.
+
+```text
+# ❌ BAD
+UserProfile.tsx
+staff.ts
+
+# ✅ GOOD
+user-profile.tsx
+staff.ts
+```
+
+## Database & Domain Naming
+
+- Use **singular** names for tables, entities, modules, and domain folders — not plural.
+
+```text
+# ❌ BAD
+users
+clinics
+staff_members
+
+# ✅ GOOD
+user
+clinic
+staff
+```
+
+Applies to: SQL/ORM table names, Drizzle models, TypeScript modules, API route segments, and ERD/DBML definitions.
+
+## TypeScript & Modules
+
+- Use **named exports** only — no default exports.
+- When a function has more than two parameters, use a **single object parameter**.
+
+```typescript
+// ❌ BAD
+export default function createUser(name: string, email: string, role: string) {}
+
+// ✅ GOOD
+export function createUser(params: CreateUserParams) {
+  const { name, email, role } = params;
+}
+```

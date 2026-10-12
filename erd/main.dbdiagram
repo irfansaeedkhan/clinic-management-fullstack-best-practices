@@ -1,0 +1,57 @@
+{
+  "version": "2.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "tablePositions": [
+      {
+        "name": "user",
+        "schemaName": "public",
+        "x": 342.2392578125,
+        "y": 12
+      },
+      {
+        "name": "session",
+        "schemaName": "public",
+        "x": 882.6240234375,
+        "y": 12
+      },
+      {
+        "name": "account",
+        "schemaName": "public",
+        "x": 882.6240234375,
+        "y": 378
+      },
+      {
+        "name": "verification",
+        "schemaName": "public",
+        "x": 12,
+        "y": 12
+      },
+      {
+        "name": "clinic",
+        "schemaName": "public",
+        "x": 318.89312557421226,
+        "y": 417.18342530408853
+      },
+      {
+        "name": "staff",
+        "schemaName": "public",
+        "x": 882.6240234375,
+        "y": 872
+      },
+      {
+        "name": "staff_role",
+        "schemaName": "public",
+        "x": 1419.27490234375,
+        "y": 12
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": []
+  },
+  "views": {}
+}

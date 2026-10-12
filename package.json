@@ -1,0 +1,37 @@
+{
+  "name": "clinic-management-system",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "ISC",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r run build",
+    "start": "pnpm -r run --parallel start",
+    "lint": "pnpm -r run --parallel lint",
+    "format": "prettier --write .",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:restart": "docker compose down && docker compose up -d",
+    "proxy:start": "portless proxy start --tld dev",
+    "proxy:stop": "portless proxy stop",
+    "proxy:trust": "portless trust",
+    "hosts:sync": "portless hosts sync"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11",
+      "onFail": "warn"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "^24",
+      "onFail": "warn"
+    }
+  },
+  "devDependencies": {
+    "prettier": "^3.8.4",
+    "typescript": "catalog:"
+  }
+}
